@@ -19,7 +19,17 @@ ENV CATALINA_HOME /tomcat
 # Install openjdk 1.8 
 RUN yum install java-1.8.0-openjdk.x86_64* -y && \ 
     yum clean all -y && \
-    rm -rf /var/lib/apt/lists/* 
+    rm -rf /var/lib/apt/lists/*
+    
+ENV JAVA_OPTS="-Dtuf.environment=DEV -Dtuf.appFiles.rootDirectory=/TempDirRoot"     
+    
+# Install Maven 3.3.9    
+ENV MAVEN_VERSION 3.3.9
+RUN (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
+    tar -zx -C /usr/local) && \
+    mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven && \
+    ln -sf /usr/local/maven/bin/mvn /usr/local/bin/mvn && \
+    mkdir -p $HOME/.m2 && chmod -R a+rwX $HOME/.m2    
 
 # INSTALL TOMCAT 
 WORKDIR /
@@ -29,9 +39,7 @@ RUN wget -q -e use_proxy=yes https://archive.apache.org/dist/tomcat/tomcat-8/v8.
     rm -f apache-tomcat-*.tar.gz && \
     mv apache-tomcat* tomcat 
 
-
-ENV JAVA_OPTS="-Dtuf.environment=DEV -Dtuf.appFiles.rootDirectory=/TempDirRoot" 
-
+ENV PATH=/opt/maven/bin/:$PATH
 
 RUN groupadd -r safe 
 RUN useradd  -r -g safe safe 
