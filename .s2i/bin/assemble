@@ -1,4 +1,4 @@
-mvn clean package
+mvn clean install
 cp -Rf /tmp/src/target/*.war $CATALINA_HOME/webapps
 chown -R 1001:1001 $CATALINA_HOME/webapps
 ls -lrt $CATALINA_HOME/webapps
