@@ -1,3 +1,4 @@
+#!/bin/bash
 cp -Rf /tmp/src/. /opt/app-root/
 cd /opt/app-root/
 mvn package
